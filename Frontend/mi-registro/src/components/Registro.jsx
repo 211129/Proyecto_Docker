@@ -5,9 +5,27 @@ function Registro() {
   const [usuario, setUsuario] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log('Usuario:', usuario, 'Contraseña:', password);
+
+    try {
+      const response = await fetch('http://localhost:3001/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ usuario, password }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      console.log(result.message);
+    } catch (error) {
+      console.error('Error al registrar el usuario:', error);
+    }
   };
 
   return (
@@ -28,3 +46,4 @@ function Registro() {
 }
 
 export default Registro;
+
